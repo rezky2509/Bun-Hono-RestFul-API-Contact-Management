@@ -16,10 +16,6 @@ import {ENV} from '../utils/env'
 
 // <------------ Run This on New Project ----------------->
 
-// THIS URI IS FOR RUNNING NEW MIGRATION
-// after .net/<DATABASENAME>
-// mongodb+srv://rezky2508:ayamitikbelummandi@cluster0.jbfpx7u.mongodb.net/contactManagement?retryWrites=true&w=majority&appName=Cluster0
-
 
 // Import DB Connection
 // const connectionToDb = require('./dbConnection.ts')

@@ -44,9 +44,6 @@ import mongoose, { mongo } from "mongoose";
 // const DB_URI:string = ENV.ATLAS_URI
 const DB_URI:string = ENV.MONGODB_COMPASS_URI
 
-// Using Mongoose URI provided by native MongoDB Atlas 
-// const DB_MONGOOSE_URI: string =  "mongodb+srv://rezky2508:ayamitikbelummandi@cluster0.jbfpx7u.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
 // Defined the mongolcient for stable API versioning
 // This is using native mongoclient API
 const clientConnectionDB = new MongoClient(DB_URI,{
