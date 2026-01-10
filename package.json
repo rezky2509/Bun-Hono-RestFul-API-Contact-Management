@@ -2,7 +2,7 @@
   "name": "bun-hono-restful",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
-    "migration": "bun run src/database/migration.ts"
+    "migration": "bun run ./src/database/migration.ts"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
