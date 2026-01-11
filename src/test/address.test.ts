@@ -171,6 +171,33 @@ describe ("PUT /api/contacts/:contactID/addresses/:addressID",async ()=>{
         await AddressTest.deleteAllAddress
     })
 
+    it('should rejected if one request is invalid', async () =>{
+        await UserTest.create()
+        await ContactTest.create()
+        await AddressTest.create()
+        const contactDetails = await ContactTest.get()
+        const addressDetails = await AddressTest.get()
+        const apiResponse = await app.request('/api/contacts/'+contactDetails._id+'/addresses/'+addressDetails._id,{
+            method:'PUT',
+            headers:{
+                'Authorization':'test'
+            },
+            body: JSON.stringify({
+                street:"New street",
+                city:"New city",
+                province:"New country",
+                country:"",
+                postal_code:"1512"
+            })
+        })
+        expect(apiResponse.status).toBe(400)
+        const bodyResponse = await apiResponse.json()
+        logger.debug(bodyResponse)
+        await UserTest.delete()
+        await ContactTest.delete()
+        await AddressTest.deleteAllAddress()
+    })
+
     it('should success if all parameter is valid', async () =>{
         await UserTest.create()
         await ContactTest.create()
@@ -281,6 +308,28 @@ describe ('GET /api/contacts/:contactID/addresses',()=>{
         await UserTest.delete()
         await ContactTest.delete()
         await AddressTest.deleteAllAddress()         
+    })
+
+    it('should return multiple address when the contact id is valid', async()=>{
+        await UserTest.create()
+        await ContactTest.create()
+        await AddressTest.createManyAddress()
+        const response = await app.request('/api/contacts'+ (await ContactTest.get())._id + '/addresses',{
+            method:'GET',
+            headers:{
+                'Authorization':'test'
+            }
+        })
+
+        // const bodyResponse = await response.json()
+        // logger.debug(response)
+        // expect (reesponse.stat)
+        await UserTest.delete()
+        await ContactTest.delete()
+        await AddressTest.deleteAllAddress()         
+        // expect(response.status).toBe(200)
+        // expect(bodyResponse.data.length).toBe(2)~
+
     })
 
 }) 

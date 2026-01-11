@@ -163,12 +163,12 @@ describe('POST /api/users',()=>{
         const response = await app.request('/api/users',{
             method: 'POST',
             body: JSON.stringify({
-                name: "Kiki",
+                name: "KikiLala",
                 password: await Bun.password.hash('secretStuff',{
                     algorithm: 'bcrypt',
                     cost: 10
                 }),
-                username: "kiki123"
+                username: "kiki1234"
             })
         })
 
@@ -177,8 +177,8 @@ describe('POST /api/users',()=>{
         logger.debug(response.status)
         
         expect(response.status).toBe(201)
-        expect(bodyResponse.data.username).toBe('kiki123')
-        expect(bodyResponse.data.name).toBe('Kiki')
+        expect(bodyResponse.data.username).toBe('kiki1234')
+        expect(bodyResponse.data.name).toBe('KikiLala')
         console.log("------------- Creating with New user  ---------------------------------")
         await UserTest.deleteWithCondition()
     }); 
