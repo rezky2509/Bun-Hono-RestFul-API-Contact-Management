@@ -9,6 +9,7 @@ A robust, high-performance RESTful API for managing personal and professional co
 * **Complete CRUD:** Full Create, Read, Update, and Delete capabilities for contacts.
 * **Data Validation:** Integrated schema validation to ensure data integrity.
 * **Search & Filter:** Easily query contacts by name, email, or labels. -> *Coming Soon Features
+* **Security:** Third-party RESTful Rate Limiter
 * **Blazing Fast:** Powered by Bun's native performance optimizations.
 
 ---
