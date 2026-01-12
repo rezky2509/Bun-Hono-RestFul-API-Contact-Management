@@ -7,6 +7,7 @@ import { ApplicationVariables } from "./models/app-models";
 import { bearerAuth } from 'hono/bearer-auth'
 import { toUserResponse, User } from "../models/Users";
 import { authMidleware } from "../middleware/auth-middleware";
+import limiter from "../service/limiter";
 // Best practice to instantiatee object
 // Dont create class for controller <-- best practice for hono
 // always use hono 
@@ -70,7 +71,7 @@ userController.use(authMidleware)
 
 // These method specify which route or endpoint that need to have the 
 // token verified
-userController.get('/api/users/current', async (c)=>{
+userController.get('/api/users/current', limiter ,async (c)=>{
     // take user
     // const userToken = c.req.header('Authorization')?.substring(7)
     // const validateToken = await userService.get(userToken)

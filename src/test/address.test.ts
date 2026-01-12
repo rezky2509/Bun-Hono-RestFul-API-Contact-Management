@@ -310,26 +310,30 @@ describe ('GET /api/contacts/:contactID/addresses',()=>{
         await AddressTest.deleteAllAddress()         
     })
 
-    it('should return multiple address when the contact id is valid', async()=>{
-        await UserTest.create()
-        await ContactTest.create()
-        await AddressTest.createManyAddress()
-        const response = await app.request('/api/contacts'+ (await ContactTest.get())._id + '/addresses',{
-            method:'GET',
-            headers:{
-                'Authorization':'test'
-            }
-        })
+    // this one need to refine. 
+    // 
+    // it('should return multiple address when the contact id is valid', async()=>{
+    //     await UserTest.create()
+    //     await ContactTest.create()
+    //     await AddressTest.createManyAddress()
+    //     const contactID  = await ContactTest.get()
+    //     const response = await app.request('/api/contacts/'+ contactID._id + '/addresses',{
+    //         method:'GET',
+    //         headers:{
+    //             'Authorization':'test'
+    //         }
+    //     })
 
-        // const bodyResponse = await response.json()
-        // logger.debug(response)
-        // expect (reesponse.stat)
-        await UserTest.delete()
-        await ContactTest.delete()
-        await AddressTest.deleteAllAddress()         
-        // expect(response.status).toBe(200)
-        // expect(bodyResponse.data.length).toBe(2)~
+    //     // const bodyResponse = await response.json()
+    //     // expect((bodyResponse.data).length).toBe(2)
+    //     logger.debug(response)
+    //     // expect (reesponse.stat)
+    //     await UserTest.delete()
+    //     await ContactTest.delete()
+    //     await AddressTest.deleteAllAddress()         
+    //     // expect(response.status).toBe(200)
+    //     // expect(bodyResponse.data.length).toBe(2)~
 
-    })
+    // })
 
 }) 

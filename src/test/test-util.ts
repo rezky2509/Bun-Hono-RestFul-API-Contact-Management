@@ -123,7 +123,8 @@ export class AddressTest {
     static async deleteAllAddress(){
         console.log(`Deleting all address`)
         try {
-            await AddressModel.deleteOne({street:"street"})
+            console.log('Deleting')
+            await AddressModel.deleteMany({contact: await ContactTest.get().then((contact)=>contact._id)})
         }catch(error){
             throw error
         }

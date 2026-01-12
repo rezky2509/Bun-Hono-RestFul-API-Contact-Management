@@ -8,6 +8,7 @@
     "bcrypt": "^6.0.0",
     "figlet": "^1.9.4",
     "hono": "^4.10.6",
+    "hono-rate-limiter": "^0.5.3",
     "mongodb": "^6.21.0",
     "mongoose": "^8.20.1",
     "ts-migrate-mongoose": "^4.1.1",
