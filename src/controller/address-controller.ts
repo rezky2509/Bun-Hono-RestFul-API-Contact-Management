@@ -5,6 +5,7 @@ import { User } from '../models/Users'
 import { CreateAddressRequest, GetAddressRequest, DeleteAddressRequest, UpdateAddressRequest } from './models/address-model'
 import { AddressService } from '../service/AddressService'
 import mongoose, { mongo } from "mongoose";
+import limiter from './limiter'
 
 // middleware
 export const addressController = new Hono<{Variables: ApplicationVariables}>
@@ -41,7 +42,7 @@ addressController.post('api/contacts/:id/addresses',async(c)=>{
     })
 })
 
-addressController.get('api/contacts/:contactID/addresses/:addressID',async(c)=>{
+addressController.get('api/contacts/:contactID/addresses/:addressID',limiter,async(c)=>{
     //get the middleware
     const user = c.get('user') as User
     // insert the parameter to the object 
@@ -105,7 +106,7 @@ addressController.delete('/api/contacts/:contact_id/addresses/:address_id', asyn
     }
 })
 
-addressController.get('/api/contacts/:contact_id/addresses', async(c)=>{
+addressController.get('/api/contacts/:contact_id/addresses', limiter ,async(c)=>{
     // Get list of all address under one contact
     const user = c.get('user') as User
     const contact_id = c.req.param('contact_id')

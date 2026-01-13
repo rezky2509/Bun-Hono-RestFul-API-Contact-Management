@@ -7,7 +7,7 @@ import { ApplicationVariables } from "./models/app-models";
 import { bearerAuth } from 'hono/bearer-auth'
 import { toUserResponse, User } from "../models/Users";
 import { authMidleware } from "../middleware/auth-middleware";
-import limiter from "../service/limiter";
+import limiter from "./limiter";
 // Best practice to instantiatee object
 // Dont create class for controller <-- best practice for hono
 // always use hono 

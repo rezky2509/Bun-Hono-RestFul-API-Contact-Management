@@ -8,6 +8,7 @@ import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
 import { HTTPException } from "hono/http-exception";
 import { Contact } from "../models/Contacts";
+import limiter from "./limiter";
 
 
 export const contactController = new Hono<{Variables: ApplicationVariables}>()
@@ -33,7 +34,7 @@ contactController.post('/api/contacts', async(c)=>{
 
 // wildcard named id 
 // stored the contact id 
-contactController.get('/api/contacts/:id', async(c)=>{
+contactController.get('/api/contacts/:id', limiter ,async(c)=>{
     // take the middleware 
     const user = c.get('user') as User
 
@@ -108,7 +109,7 @@ contactController.delete('api/contacts/:id',async(c)=>{
 })
 
 
-contactController.get('api/contacts',async(c)=>{
+contactController.get('api/contacts', limiter ,async(c)=>{
     const user = c.get('user') as User
 
     // Url Query 
