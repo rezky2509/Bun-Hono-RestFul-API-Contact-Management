@@ -22,9 +22,6 @@ import { ZodError } from 'zod'
 import { contactController } from './controller/contact-controller'
 import { addressController } from './controller/address-controller'
 
-// Hono rate limiter 
-import { rateLimiter } from "hono-rate-limiter";
-
 const app = new Hono()
 // Middleware
 // app.use(poweredBy())
@@ -39,22 +36,6 @@ try {
 
 
 app.use(logger())
-
-// const limiter = rateLimiter({
-//   windowMs: windowTime,
-//   limit: 10,
-//   standardHeaders: 'draft-6',
-//   keyGenerator: (c)=>c.req.header('x-forwarded-for') || c.req.header('remote-addr') || 'anonymous',
-//   handler: (c)=>{
-//     return c.text('Too many request.',429)
-//   }
-// })
-
-// app.get('/*',limiter,(c)=>{
-//   return c.json({
-//     message: 'succes'
-//   })
-// })
 
 // register the controller to the service 
 // this enable the endpoint to be access to the file service
