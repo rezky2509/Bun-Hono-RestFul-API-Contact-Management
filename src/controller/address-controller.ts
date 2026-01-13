@@ -25,13 +25,40 @@ addressController.post('api/contacts/:id/addresses',async(c)=>{
     // const contact_ID = new ObjectId(c.req.param('id') as string)
     const contact_ID = c.req.param('id')
     
-    console.log(`User contactID ${contact_ID}`)
+    // console.log(`User contactID ${contact_ID}`)
     // get the data from the body request
     // with type of create address request
     // need to use await 
-    const request = await c.req.json() as CreateAddressRequest
-    // need to insert the contact_ID
-    request.contact = contact_ID
+    let request = await c.req.json()
+
+    // Check the request is it an array 
+    // console.log(Array.isArray(request.data))
+    const isRequestAnArray = Array.isArray(request.data)
+    // console.log(isRequestAnArray)
+    console.log('Before inserting each contact id ')
+    const requestIsAnArray = request.data
+    if(isRequestAnArray){
+        // for(let a: number = 0; a<request.data.length; a++){
+        //     console.log(`Loop for ${a}`)
+        //     request.data = contact_ID 
+        //     console.log(request)
+        // }
+        console.log('Altering the request')
+        request = requestIsAnArray.map((ob:CreateAddressRequest)=>(
+            // need to insert the contact_ID
+            // Spread operator ...
+            // Insert all the other key and value
+            // Insert the contact key to the related contact id 
+            {...ob,
+                "contact":contact_ID
+            }
+        ))
+    }else{
+        // If the data is not an array
+        // add new key to the request body 
+        // for the contact
+        request.contact = contact_ID
+    }
     // calling the address service 
     // AddressService.create()
     // two params, 
@@ -40,6 +67,9 @@ addressController.post('api/contacts/:id/addresses',async(c)=>{
     return c.json({
         data:response
     })
+    // return c.json({
+    //     data:"Testing Stage"
+    // })
 })
 
 addressController.get('api/contacts/:contactID/addresses/:addressID',limiter,async(c)=>{

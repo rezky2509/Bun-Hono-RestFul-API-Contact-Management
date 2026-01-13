@@ -86,10 +86,9 @@ app.onError(async(error,c)=>{
 
 
 // accessing the route
-// export default app 
-export default {
-  port: 3050,
-  fetch: app.fetch
-
-}
+export default app 
+// export default {
+//   port: 3050,
+//   fetch: app.fetch
+// }
 // Default Port number is 3000

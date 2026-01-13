@@ -7,47 +7,99 @@ import { User } from "../models/Users";
 import { AddressValidation } from "../validation/AddressValidation";
 import { ContactService } from "./contactService";
 import mongoose, { Mongoose } from "mongoose";
-import e = require("cors");
 
 export class AddressService {
-   static async create(user: User, request: CreateAddressRequest): Promise<AddressResponse>{
+   static async create(user: User, request: CreateAddressRequest| CreateAddressRequest[]): Promise<AddressResponse | AddressResponse[]>{
     // Checking the address response payload format 
    console.log(`Checking payload`)
-   console.log(request)
-   const validation = AddressValidation.CREATE.safeParse(request)
-   console.log(validation)
-   // Refactor 
-   // 1. Check the payload. 
-   if(validation.success===false){
-      console.log(`Payload is invalid.`)
-      throw new HTTPException(400,{
-         cause: 'Invalid Input'
-      })
-   }
-   // 2. Check the contact id is valid 
-   console.log(`Checking contact ID format from parameter`)
-   const idIsValid: boolean = mongoose.Types.ObjectId.isValid(request.contact)
-   if(!idIsValid){
-      throw new HTTPException(404,{
-         cause:"Contact not found"
-      })
-   }
-   // 3. Check if the contact is exist when the id is valid ()input must be a 24 character hex string, 12 byte Uint8Array, or an integer
-   console.log(`Checking does the contact is exist`)
-   const contactIsExist = await ContactService.contactMustExists(user, new mongoose.Types.ObjectId(request.contact)) 
-   if(!contactIsExist){
-      throw new HTTPException(404,{
-         cause:"Contact not found"
-      })
-   }
-   // 4. If all condition is meet, insert the contact to database
-   // insert to mongodb
-   console.log('Inserting data to db')
-   //  error here 
-   const address = await AddressModel.create(request)
+   // let validation = AddressValidation.CREATE.safeParse(request)
+   // console.log(validation)
 
-   // return as toAddressResponse Model 
-   return toAddressResponse(address)
+   // (Loop for every data)
+   // Check every array data format
+   if(Array.isArray(request)){
+      // if the data is an array
+      console.log('Data is an array')
+      for(let a = 0; a<request.length; a++){
+         let validation = AddressValidation.CREATE.safeParse(request[a])
+         if(validation.success == false){
+            throw new HTTPException(400,{
+               cause: 'Invalid Input'
+            })
+         }
+
+         // 2. Check the contact id is valid 
+         console.log(`Checking contact ID format from parameter`)
+         const idIsValid: boolean = mongoose.Types.ObjectId.isValid(request[a].contact)
+         if(!idIsValid){
+            throw new HTTPException(404,{
+               cause:"Contact not found"
+            })
+         }
+
+         // 3. Check if the contact is exist when the id is valid ()input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+         console.log(`Checking does the contact is exist`)
+         const contactIsExist = await ContactService.contactMustExists(user, new mongoose.Types.ObjectId(request[a].contact)) 
+         if(!contactIsExist){
+            throw new HTTPException(404,{
+               cause:"Contact not found"
+            })
+         }
+      }
+      // Insert Many
+      // 4. If all condition is meet, insert the contact to database
+      // insert to mongodb
+      console.log('Inserting data to db')
+      //  error here 
+      const address = await AddressModel.create(request)
+      // return as toAddressResponse Model 
+      // return toAddressResponse(address) 
+      return address.map((a:Address)=>(
+         toAddressResponse(a)
+      ))
+      
+   }else{
+      console.log('Data is not an array')
+      const validation = AddressValidation.CREATE.safeParse(request)
+      // If the data is not an array
+      // Refactor 
+      // 1. Check the payload. 
+      console.log(request)
+      console.log(validation.error)
+      if(validation.success===false){
+         console.log(`Payload is invalid.`)
+         throw new HTTPException(400,{
+            cause: 'Invalid Input'
+         })
+      }
+      // 2. Check the contact id is valid 
+      console.log(`Checking contact ID format from parameter`)
+      const idIsValid: boolean = mongoose.Types.ObjectId.isValid(request.contact)
+      if(!idIsValid){
+         throw new HTTPException(404,{
+            cause:"Contact not found"
+         })
+      }
+      // 3. Check if the contact is exist when the id is valid ()input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      console.log(`Checking does the contact is exist`)
+      const contactIsExist = await ContactService.contactMustExists(user, new mongoose.Types.ObjectId(request.contact)) 
+      if(!contactIsExist){
+         throw new HTTPException(404,{
+            cause:"Contact not found"
+         })
+      }
+      // 4. If all condition is meet, insert the contact to database
+      // insert to mongodb
+      console.log('Inserting data to db')
+      //  error here 
+      const address = await AddressModel.create(request)
+
+      // return as toAddressResponse Model 
+      return toAddressResponse(address)
+   }
+
+
+
    }
 
    static async get(user: User, request: GetAddressRequest) {

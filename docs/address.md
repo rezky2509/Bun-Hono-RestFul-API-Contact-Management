@@ -30,6 +30,56 @@ Response Body:
     }
 }
 ```
+## Create Multiple Address
+Endpoint: POST /api/contacts/{contactID}/addresses
+
+Request Headers: 
+- Authentication: token
+
+Request Body:
+```json
+{
+    "data":[
+        {
+            "street":"street",
+            "city":"city",
+            "province":"country",
+            "country":"country",
+            "postal_code":"1512"
+        },
+        {
+            "street":"street",
+            "city":"city",
+            "province":"country",
+            "country":"country",
+            "postal_code":"1512"
+        }
+    ]
+}
+
+```
+Response Body: 
+```json
+{
+    "data":[
+                {
+                    "id":1,
+                    "street":"street",
+                    "city":"city",
+                    "province":"country",
+                    "country":"country",
+                    "postal_code":"1512"
+                },{
+                    "id":2,
+                    "street":"street",
+                    "city":"city",
+                    "province":"country",
+                    "country":"country",
+                    "postal_code":"1512"
+                }
+            ]
+}
+```
 
 ## Get Address
 Endpoint: GET /api/contacts/{contactID}/addresses/{addressID}
