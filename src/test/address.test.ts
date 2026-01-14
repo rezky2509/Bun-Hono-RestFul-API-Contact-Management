@@ -2,8 +2,10 @@ import {expect, describe, it, beforeEach} from 'bun:test'
 import { AddressTest, ContactTest, UserTest } from './test-util'
 import app from '../index'
 import { logger } from '../application/logging'
+import { ContactResponse, toContactResponse } from '../controller/models/contact-models'
 
 describe ("POST /api/contacts/:id/addresses",()=>{
+    // Pass 15/01/2026
     it('should rejected if request is not valid',async ()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -26,6 +28,7 @@ describe ("POST /api/contacts/:id/addresses",()=>{
         const body = await response.json()
         expect(body.errors).toBeDefined()
     })
+    // Pass 15/01/2026
     it('should rejected if contact is not valid',async ()=>{
         // await ContactTest.get()
         // const invalidID: ObjectId = 
@@ -44,6 +47,7 @@ describe ("POST /api/contacts/:id/addresses",()=>{
         const body = await response.json()
         expect(body.errors).toBeDefined()         
     })
+    // Pass 15/01/2026
     it('should success if request is valid',async ()=>{
         const getContact = await ContactTest.get()
         const response = await app.request('/api/contacts/'+getContact._id+'/addresses',{
@@ -74,6 +78,7 @@ describe ("POST /api/contacts/:id/addresses",()=>{
 })
 
 describe ("GET /api/contacts/:contactID/addresses/:addressID",()=>{
+    // Pass 15/01/2026
     it('should rejected if address is not found',async ()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -92,6 +97,7 @@ describe ("GET /api/contacts/:contactID/addresses/:addressID",()=>{
         await UserTest.delete()
         await AddressTest.deleteAllAddress()
     })
+    // Pass 15/01/2026
     it('should success if address is found',async ()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -120,6 +126,7 @@ describe ("GET /api/contacts/:contactID/addresses/:addressID",()=>{
 })
 
 describe ("PUT /api/contacts/:contactID/addresses/:addressID",async ()=>{
+    // Pass 15/01/2026
     it('should failed if address is not found',async ()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -145,6 +152,7 @@ describe ("PUT /api/contacts/:contactID/addresses/:addressID",async ()=>{
         await AddressTest.deleteAllAddress()
         await UserTest.delete()
     })
+    // Pass 15/01/2026
     it('should failed if contact is not found',async()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -171,6 +179,7 @@ describe ("PUT /api/contacts/:contactID/addresses/:addressID",async ()=>{
         await AddressTest.deleteAllAddress
     })
 
+    // Pass 15/01/2026
     it('should rejected if one request is invalid', async () =>{
         await UserTest.create()
         await ContactTest.create()
@@ -198,6 +207,7 @@ describe ("PUT /api/contacts/:contactID/addresses/:addressID",async ()=>{
         await AddressTest.deleteAllAddress()
     })
 
+    // Pass 15/01/2026
     it('should success if all parameter is valid', async () =>{
         await UserTest.create()
         await ContactTest.create()
@@ -231,6 +241,7 @@ describe ("PUT /api/contacts/:contactID/addresses/:addressID",async ()=>{
 })
 
 describe ("DELETE /api/contacts/:contactID/addresses/:addressID",async ()=>{
+    // Pass 15/01/2026
     it('should failed if address or contact is not found', async ()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -251,6 +262,7 @@ describe ("DELETE /api/contacts/:contactID/addresses/:addressID",async ()=>{
         await AddressTest.deleteAllAddress()
     })
 
+    // Pass 15/01/2026
     it('should success if address is found', async()=>{ 
         await UserTest.create()
         await ContactTest.create()
@@ -273,6 +285,7 @@ describe ("DELETE /api/contacts/:contactID/addresses/:addressID",async ()=>{
 })
 
 describe ('GET /api/contacts/:contactID/addresses',()=>{
+    // Pass 15/01/2026
     it('should failed when contact is invalid', async()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -291,6 +304,7 @@ describe ('GET /api/contacts/:contactID/addresses',()=>{
         await AddressTest.deleteAllAddress()
     })
 
+    // Pass 15/01/2026
     it('should sucess when contact id is valid', async()=>{
         await UserTest.create()
         await ContactTest.create()  
@@ -311,29 +325,29 @@ describe ('GET /api/contacts/:contactID/addresses',()=>{
     })
 
     // this one need to refine. 
-    // 
-    // it('should return multiple address when the contact id is valid', async()=>{
-    //     await UserTest.create()
-    //     await ContactTest.create()
-    //     await AddressTest.createManyAddress()
-    //     const contactID  = await ContactTest.get()
-    //     const response = await app.request('/api/contacts/'+ contactID._id + '/addresses',{
-    //         method:'GET',
-    //         headers:{
-    //             'Authorization':'test'
-    //         }
-    //     })
-
-    //     // const bodyResponse = await response.json()
-    //     // expect((bodyResponse.data).length).toBe(2)
-    //     logger.debug(response)
-    //     // expect (reesponse.stat)
-    //     await UserTest.delete()
-    //     await ContactTest.delete()
-    //     await AddressTest.deleteAllAddress()         
-    //     // expect(response.status).toBe(200)
-    //     // expect(bodyResponse.data.length).toBe(2)~
-
-    // })
+    it('should return multiple address when the contact id is valid', async()=>{
+        await UserTest.create()
+        await ContactTest.create()
+        await AddressTest.createManyAddress()
+        const contactID  = await ContactTest.get()
+        const response = await app.request('/api/contacts/'+ contactID._id + '/addresses',{
+            method:'GET',
+            headers:{
+                'Authorization':'test'
+            }
+        })
+        expect(response.status).toBe(200)
+        const bodyResponse = await response.json()
+        // expect((bodyResponse.data).length).toBe(2)
+        expect(bodyResponse.data.length).toBe(5)
+        // Need to check the body
+        // logger.debug(responsebody)
+        // expect (reesponse.stat)
+        await UserTest.delete()
+        await ContactTest.delete()
+        await AddressTest.deleteAllAddress()         
+        // expect(response.status).toBe(200)
+        // expect(bodyResponse.data.length).toBe(2)~
+    })
 
 }) 

@@ -168,7 +168,7 @@ describe('POST /api/users',()=>{
                     algorithm: 'bcrypt',
                     cost: 10
                 }),
-                username: "kiki1234"
+                username: "kiki12345"
             })
         })
 
@@ -177,7 +177,7 @@ describe('POST /api/users',()=>{
         logger.debug(response.status)
         
         expect(response.status).toBe(201)
-        expect(bodyResponse.data.username).toBe('kiki1234')
+        expect(bodyResponse.data.username).toBe('kiki12345')
         expect(bodyResponse.data.name).toBe('KikiLala')
         console.log("------------- Creating with New user  ---------------------------------")
         await UserTest.deleteWithCondition()

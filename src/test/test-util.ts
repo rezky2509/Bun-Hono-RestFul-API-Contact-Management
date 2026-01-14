@@ -44,11 +44,11 @@ export class UserTest {
     static async deleteWithCondition(){
         console.log("Deleting Specific Collection..")
         try{
-            await UserModel.deleteOne({username:'kiki123'})
+            await UserModel.deleteOne({username:'kiki12345'})
         }catch(error){
             console.warn(`Error in ${error}`)
         }
-        console.log("Successful Deleted username kiki123")
+        console.log("Successful Deleted username kiki1235")
     }
 
     // parameter accepted is objectid by mongodb

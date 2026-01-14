@@ -19,7 +19,7 @@ describe('POST /api/contacts',()=>{
     //     // delete user 
     //     await UserTest.delete()
     // })
-    // PASS 24/11/2025
+    // PASS 15/01/2026
     it('should be rejected if contact is invalid and token is invalid', async()=>{
         await UserTest.create()
         const response = await app.request('/api/contacts',{
@@ -40,7 +40,7 @@ describe('POST /api/contacts',()=>{
         await UserTest.delete()
     })
     
-    // PASS 24/11/2025
+    // PASS 15/01/2026
     it('should be rejected if contact is invalid', async()=>{
         await UserTest.create()
         const response = await app.request('/api/contacts',{
@@ -52,8 +52,8 @@ describe('POST /api/contacts',()=>{
                 firstname: ""
             })
         })
-        expect(response.status).toBe(401)
-
+        expect(response.status).toBe(400)
+        logger.debug(response)
         const body = await response.json()
         console.log(body)
 
@@ -61,7 +61,7 @@ describe('POST /api/contacts',()=>{
         await UserTest.delete()
     })
 
-    // PASS 24/11/2025
+    // PASS 15/01/2026
     it('should be able if contact is valid (firstname only)', async()=>{
         await UserTest.create()
         const response = await app.request('/api/contacts',{
@@ -132,7 +132,7 @@ describe('POST /api/contacts',()=>{
 
 describe('GET /api/contacts/{id}', ()=>{
 
-    // PASS 24/11/2025
+    // PASS 15/01/2026
     it('should get 404 if contact is not found ',async()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -153,7 +153,7 @@ describe('GET /api/contacts/{id}', ()=>{
         await ContactTest.delete()
     })  
 
-    // PASS 24/11/2025
+    // PASS 15/01/2026
     it('should success contact detail if exist ',async()=>{
 
         await UserTest.create()
@@ -185,7 +185,7 @@ describe('GET /api/contacts/{id}', ()=>{
 
 describe('PUT /api/contacts/:id',()=>{
 
-    // PASS 24/11/2025 
+    // PASS 15/01/2026
     it('should reject if input/firstname is empty', async()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -205,7 +205,7 @@ describe('PUT /api/contacts/:id',()=>{
         await ContactTest.delete()
     })
 
-    // PASS 24/11/2025
+    // PASS 15/01/2026
     it('should reject if contact id is invalid or not found', async()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -227,7 +227,7 @@ describe('PUT /api/contacts/:id',()=>{
         await ContactTest.delete()
     })
 
-    // PASS 24/11/2025
+    // PASS 15/01/2026
     it('should success if request is valid', async()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -254,7 +254,7 @@ describe('PUT /api/contacts/:id',()=>{
 
 describe('DELETE /api/contacts/:id',()=>{
 
-    // PASS 24/11/2025
+    // PASS 15/01/2026
     it('should reject if parameter is invalid',async()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -270,7 +270,7 @@ describe('DELETE /api/contacts/:id',()=>{
         await ContactTest.delete()
     })
 
-    // PASS 24/11/2025
+    // PASS 15/01/2026
     it('should success if parameter is valid',async()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -288,7 +288,7 @@ describe('DELETE /api/contacts/:id',()=>{
         await ContactTest.delete()
     })
 
-    // PASS 24/11/2025
+    // PASS 15/01/2026
     it('should show user id object', async()=>{
 
         // // Connecting to Db 
@@ -306,13 +306,13 @@ describe('DELETE /api/contacts/:id',()=>{
         expect(user_id).toBeDefined()
 
         await UserTest.delete()
-        // await ContactTest.delete()
+        await ContactTest.delete()
     })
 })
 
 describe('GET /api/contacts', ()=>{
 
-    // PASS 25/11/2025
+    // PASS 15/01/2026
     it('should be able to search contact without parameter',async()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -335,7 +335,7 @@ describe('GET /api/contacts', ()=>{
         await ContactTest.delete()
    })
    
-    //PASS 25/5/2025    
+    //PASS 15/01/2026
     it('should be able to search contact using name',async()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -365,7 +365,7 @@ describe('GET /api/contacts', ()=>{
         await ContactTest.delete()
     })
 
-    // PASS 25/5/2025
+    // PASS 15/01/2026
     it('should be able to search contact using email',async()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -395,7 +395,7 @@ describe('GET /api/contacts', ()=>{
         await ContactTest.delete()
     })
 
-    // PASS 25/11/2025
+    // PASS 15/01/2026
     it('should be able to search contact using phone',async()=>{
         await UserTest.create()
         await ContactTest.create()
@@ -425,7 +425,7 @@ describe('GET /api/contacts', ()=>{
         await ContactTest.delete()
     })
 
-    // PASS 25/11/2025
+    // PASS 15/01/2026
     it('should be able to search without result',async()=>{
         // should return empty if data is not found 
         await UserTest.create()
