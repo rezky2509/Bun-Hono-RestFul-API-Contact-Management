@@ -30,19 +30,9 @@ addressController.post('api/contacts/:id/addresses',async(c)=>{
     // with type of create address request
     // need to use await 
     let request = await c.req.json()
-
-    // Check the request is it an array 
-    // console.log(Array.isArray(request.data))
     const isRequestAnArray = Array.isArray(request.data)
-    // console.log(isRequestAnArray)
-    console.log('Before inserting each contact id ')
     const requestIsAnArray = request.data
     if(isRequestAnArray){
-        // for(let a: number = 0; a<request.data.length; a++){
-        //     console.log(`Loop for ${a}`)
-        //     request.data = contact_ID 
-        //     console.log(request)
-        // }
         console.log('Altering the request')
         request = requestIsAnArray.map((ob:CreateAddressRequest)=>(
             // need to insert the contact_ID
@@ -67,9 +57,6 @@ addressController.post('api/contacts/:id/addresses',async(c)=>{
     return c.json({
         data:response
     })
-    // return c.json({
-    //     data:"Testing Stage"
-    // })
 })
 
 addressController.get('api/contacts/:contactID/addresses/:addressID',limiter,async(c)=>{

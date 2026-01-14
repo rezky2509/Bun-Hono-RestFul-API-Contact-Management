@@ -4,75 +4,136 @@ import UserModel, { User } from "../models/Users";
 import { ContactValidation } from "../validation/contactValidation";
 import ContactModel, { Contact } from "../models/Contacts";
 import { ObjectId } from "mongodb";
-import  mongoose  from "mongoose";
 import { Pageable } from "../controller/models/page-models";
+import { object } from "zod";
 
 export class ContactService {
     // the argument expect who the user that 
     // request to create the contact
     // second argument is the request body 
     // return type is the contactResponse inside the models 
-    static async create(user: User, request: CreateContactRequest): Promise<ContactResponse>{
-        console.log('Validating request')
-        const validateRequest = ContactValidation.CREATE.safeParse(request)
-        console.log('Validate Request result')
-        console.log(validateRequest)
-        console.log('Request ')
-        console.log(request)
+    static async create(user: User, request: CreateContactRequest | CreateContactRequest[]): Promise<ContactResponse | ContactResponse[]>{
 
+        // Use definite assignment
+        // Definite assignment is ensuring that 
+        // this variable will be assigned. 
+        // Why definite assignment not working?
+        // Why initializing empty array work?
+        const contactResponse: ContactResponse[] = []
 
-        if(validateRequest.error){
-            throw new HTTPException(401,{
-                cause: "Invalid Input. First name is required"
-            })
-        }
+        // If the request is an array   
+        if(Array.isArray(request)){
+            for(let a = 0; a<request.length; a++){
+                console.log('Validating request')
+                const validateRequest = ContactValidation.CREATE.safeParse(request[a])
+                console.log('Validate Request result')
+                console.log(validateRequest)
+                console.log('Request ')
+                console.log(request)
 
-        console.log('Storing data to DBs')
-        // Sending data to DB
-        const responseDB = await ContactModel.create({
-            firstname: request.firstname,
-            lastname: request.lastname,
-            email: request.email,
-            phone: request.phone,
-            user: user._id
-        }) as Contact
-        console.log("Stored to contact collection ")
-
-        console.log('Attemtpting to store at user collection')
-        // Alter the and update the data at contact collections
-        // await UserModel.findById({_id: user._id},{
-        //     contactsDetails: [
-        //         {
-        //             firstname: request.firstname,
-        //             lastname: request.lastname,
-        //             email: request.email,
-        //             phone: request.phone,
-        //         }
-        //     ]
-        // })
-
-        // $set is used for non array object assigment
-        // $push: Use when you want to add a new element to an existing array.
-        // $set: Use when you want to replace the value of a field, 
-        // or update a specific field within an object (including objects within arrays using the positional operator .$).
-        await UserModel.findOneAndUpdate(
-            {_id:user._id},
-            {
-                $push:
-                {
-                contactsDetails: {
-                        firstname: request.firstname,
-                        lastname: request.lastname,
-                        email: request.email,
-                        phone: request.phone,
-                        }
+                if(validateRequest.error){
+                    throw new HTTPException(400,{
+                        cause: "Invalid Input. First name is required"
+                    })
                 }
+
+                console.log('Storing data to collection of contact')
+                // Sending data to DB
+                const responseDB = await ContactModel.create({
+                    firstname: request[a].firstname,
+                    lastname: request[a].lastname,
+                    email: request[a].email,
+                    phone: request[a].phone,
+                    user: user._id
+                }) as Contact
+                console.log('Result from database')
+                console.log(responseDB)
+                contactResponse.push(toContactResponse(responseDB))
+                
+                console.log("Stored to contact collection ")
+                console.log('Attempting to store at user collection')
+                // $set is used for non array object assigment
+                // $push: Use when you want to add a new element to an existing array.
+                // $set: Use when you want to replace the value of a field, 
+                // or update a specific field within an object (including objects within arrays using the positional operator .$).
+                await UserModel.findOneAndUpdate(
+                    {_id:user._id},
+                    {
+                        $push:
+                        {
+                        contactsDetails: {
+                                firstname: request[a].firstname,
+                                lastname: request[a].lastname,
+                                email: request[a].email,
+                                phone: request[a].phone,
+                                }
+                        }
+                    }
+                )
+                console.log("Stored to user collection ")
             }
-        )
-        console.log("Stored to user collection ")
+            return contactResponse
+        } else{
+            // If the request is not an array
+            console.log('Validating request')
+            const validateRequest = ContactValidation.CREATE.safeParse(request)
+            console.log('Validate Request result')
+            console.log(validateRequest)
+            console.log('Request ')
+            console.log(request)
 
+            if(validateRequest.error){
+                throw new HTTPException(400,{
+                    cause: "Invalid Input. First name is required"
+                })
+            }
 
-        return toContactResponse(responseDB)
+            console.log('Storing data to DBs')
+            // Sending data to DB
+            const responseDB = await ContactModel.create({
+                firstname: request.firstname,
+                lastname: request.lastname,
+                email: request.email,
+                phone: request.phone,
+                user: user._id
+            }) as Contact
+            console.log("Stored to contact collection ")
+
+            console.log('Attemtpting to store at user collection')
+            // Alter the and update the data at contact collections
+            // await UserModel.findById({_id: user._id},{
+            //     contactsDetails: [
+            //         {
+            //             firstname: request.firstname,
+            //             lastname: request.lastname,
+            //             email: request.email,
+            //             phone: request.phone,
+            //         }
+            //     ]
+            // })
+
+            // $set is used for non array object assigment
+            // $push: Use when you want to add a new element to an existing array.
+            // $set: Use when you want to replace the value of a field, 
+            // or update a specific field within an object (including objects within arrays using the positional operator .$).
+            await UserModel.findOneAndUpdate(
+                {_id:user._id},
+                {
+                    $push:
+                    {
+                    contactsDetails: {
+                            firstname: request.firstname,
+                            lastname: request.lastname,
+                            email: request.email,
+                            phone: request.phone,
+                            }
+                    }
+                }
+            )
+            console.log("Stored to user collection ")
+            console.log(responseDB)
+            return toContactResponse(responseDB)
+        }
     }
 
     static async get(user: User, contactId: ObjectId):Promise<ContactResponse>{

@@ -3,7 +3,7 @@ import { ApplicationVariables } from "./models/app-models";
 import { authMidleware } from "../middleware/auth-middleware";
 import { User } from "../models/Users";
 import { ContactService } from "../service/contactService";
-import { CreateContactRequest, SearchContactRequest, UpdateContactRequest } from "./models/contact-models";
+import { ContactResponse, CreateContactRequest, SearchContactRequest, UpdateContactRequest } from "./models/contact-models";
 import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
 import { HTTPException } from "hono/http-exception";
@@ -23,12 +23,21 @@ contactController.post('/api/contacts', async(c)=>{
     const user = c.get('user') as User
 
     // json return as promise
-    const request = await c.req.json() as CreateContactRequest
-
+    // let request = await c.req.json() as CreateContactRequest
+    let request = await c.req.json()
+    
+    // Check whether the request is an array or not
+    if(Array.isArray(request.data)){
+        console.log('Request is an array')
+        request = request.data
+    }
     const response = await ContactService.create(user, request)
 
+    // return c.json({
+    //     payload: 'OK'
+    // },201)
     return c.json({
-        payload:response
+        payload: response
     },201)
 })
 
