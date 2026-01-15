@@ -16,9 +16,18 @@ A robust, high-performance RESTful API for managing personal and professional co
 
 ## 🛠️ Tech Stack
 
-* **Runtime:** [Bun](https://bun.sh/)
+* **Framework:** [Hono](https://hono.dev/) (Ultrafast web framework for the Edges)
+* **Runtime:** [Bun](https://bun.sh/) (Fast all-in-one JavaScript runtime)
 * **Database:** [MongoDB](https://www.mongodb.com/)
-* **ODM:** [Mongoose](https://mongoosejs.com/)
-* **Security:** [Bcrypt](https://github.com/kelektiv/node.bcrypt.js) (for password hashing) & [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken)
+* **Authentication:** JWT (JSON Web Tokens)
+* **Security:** Third-party RESTful Rate Limiter
+* **Testing:** Bun Test (Native test runner)
+* **Language:** TypeScript
 
 ---
+
+## 📖 API Documentation
+
+The full, detailed API specification—including request/response examples and error schemas—is located in the documentation directory:
+
+📂 **Full Specification:** [`./docs/`](./docs)
