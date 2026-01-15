@@ -56,7 +56,7 @@ addressController.post('api/contacts/:id/addresses',async(c)=>{
     const response = await AddressService.create(user,request)
     return c.json({
         data:response
-    })
+    },201)
 })
 
 addressController.get('api/contacts/:contactID/addresses/:addressID',limiter,async(c)=>{

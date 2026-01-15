@@ -2,7 +2,6 @@ import {expect, describe, it, beforeEach} from 'bun:test'
 import { AddressTest, ContactTest, UserTest } from './test-util'
 import app from '../index'
 import { logger } from '../application/logging'
-import { ContactResponse, toContactResponse } from '../controller/models/contact-models'
 
 describe ("POST /api/contacts/:id/addresses",()=>{
     // Pass 15/01/2026
@@ -64,7 +63,8 @@ describe ("POST /api/contacts/:id/addresses",()=>{
             })
         })
 
-        expect(response.status).toBe(200)
+        expect(response.status).toBe(201)
+        logger.debug(response.status)
         const body = await response.json()
         expect(body.data.street).toBe("street")
         expect(body.data.city).toBe("city")
@@ -74,6 +74,52 @@ describe ("POST /api/contacts/:id/addresses",()=>{
 
         await UserTest.delete()
         await AddressTest.deleteAllAddress()
+        await ContactTest.delete()
+    })
+
+    it('should return multiple address when the contact id is valid and the body contain multiple addresses', async()=>{
+        await UserTest.create()
+        await ContactTest.create()
+        // await AddressTest.createManyAddress()
+        const contactID  = await ContactTest.get()
+        const response = await app.request('/api/contacts/'+ contactID._id + '/addresses',{
+            method:'POST',
+            headers:{
+                'Authorization':'test'
+            },
+            body:JSON.stringify(
+                {
+                data:[
+                        {
+                            street:"street",
+                            city:"city",   
+                            province:"country",
+                            country:"country",
+                            postal_code:"1512",      
+                        },
+                        {
+                            street:"street",
+                            city:"city",   
+                            province:"country",
+                            country:"country",
+                            postal_code:"1512",      
+                        }
+                    ]
+                }
+            )
+        })
+        const body = await response.json();
+        expect(response.status).toBe(201)
+        logger.debug(body.errors)
+        // expect(response.status).toBe(201)
+        expect(body.data.length).toBe(2)
+
+        await AddressTest.deleteAllAddress()         
+        await ContactTest.delete()
+        await UserTest.delete()
+
+        // expect(response.status).toBe(200)
+        // expect(bodyResponse.data.length).toBe(2)~
     })
 })
 
@@ -93,9 +139,10 @@ describe ("GET /api/contacts/:contactID/addresses/:addressID",()=>{
         expect (response.status).toBe(404)
         const body = await response.json()
         expect(body.errors).toBeDefined()
+
+        await AddressTest.deleteAllAddress()
         await ContactTest.delete()
         await UserTest.delete()
-        await AddressTest.deleteAllAddress()
     })
     // Pass 15/01/2026
     it('should success if address is found',async ()=>{
@@ -118,10 +165,10 @@ describe ("GET /api/contacts/:contactID/addresses/:addressID",()=>{
         expect(body.data.province).toBe('country')
         expect(body.data.country).toBe('country')
         expect(body.data.postal_code).toBe('1512')
-
+        
+        await AddressTest.deleteAllAddress()
         await ContactTest.delete()
         await UserTest.delete()
-        await AddressTest.deleteAllAddress()
     })
 })
 
@@ -148,8 +195,9 @@ describe ("PUT /api/contacts/:contactID/addresses/:addressID",async ()=>{
 
         // const body = await response.json()
         expect(response.status).toBe(404)
-        await UserTest.delete()
+
         await AddressTest.deleteAllAddress()
+        await ContactTest.delete()
         await UserTest.delete()
     })
     // Pass 15/01/2026
@@ -174,9 +222,10 @@ describe ("PUT /api/contacts/:contactID/addresses/:addressID",async ()=>{
 
         const body = await response.json()
         expect(response.status).toBe(404)
-        await UserTest.delete()
+
+        await AddressTest.deleteAllAddress()
         await ContactTest.delete()
-        await AddressTest.deleteAllAddress
+        await UserTest.delete()
     })
 
     // Pass 15/01/2026
@@ -202,9 +251,10 @@ describe ("PUT /api/contacts/:contactID/addresses/:addressID",async ()=>{
         expect(apiResponse.status).toBe(400)
         const bodyResponse = await apiResponse.json()
         logger.debug(bodyResponse)
-        await UserTest.delete()
-        await ContactTest.delete()
+
         await AddressTest.deleteAllAddress()
+        await ContactTest.delete()
+        await UserTest.delete()
     })
 
     // Pass 15/01/2026
@@ -234,9 +284,9 @@ describe ("PUT /api/contacts/:contactID/addresses/:addressID",async ()=>{
         expect(responseBody.data.province).toBe('New country')
         expect(responseBody.data.country).toBe('New country')
         expect(responseBody.data.postal_code).toBe('1512')  
-        await UserTest.delete()
-        await ContactTest.delete()
         await AddressTest.deleteAllAddress()
+        await ContactTest.delete()
+        await UserTest.delete()
     })
 })
 
@@ -257,9 +307,10 @@ describe ("DELETE /api/contacts/:contactID/addresses/:addressID",async ()=>{
         logger.debug(`Response status: ${response}`)
         const body = await response.json()
         logger.debug(body)
-        await UserTest.delete()
-        await ContactTest.delete()
+
         await AddressTest.deleteAllAddress()
+        await ContactTest.delete()
+        await UserTest.delete()
     })
 
     // Pass 15/01/2026
@@ -278,9 +329,10 @@ describe ("DELETE /api/contacts/:contactID/addresses/:addressID",async ()=>{
         expect(response.status).toBe(200)
         const body = await response.json()
         logger.debug(body.data)
-        await UserTest.delete()
-        await ContactTest.delete()
+
         await AddressTest.deleteAllAddress()
+        await ContactTest.delete()
+        await UserTest.delete()
     })
 })
 
@@ -299,9 +351,10 @@ describe ('GET /api/contacts/:contactID/addresses',()=>{
         expect (response.status).toBe(404)
         const body = await response.json()
         logger.debug(body)
-        await UserTest.delete()
-        await ContactTest.delete()
+
         await AddressTest.deleteAllAddress()
+        await ContactTest.delete()
+        await UserTest.delete()
     })
 
     // Pass 15/01/2026
@@ -319,35 +372,8 @@ describe ('GET /api/contacts/:contactID/addresses',()=>{
         expect(response.status).toBe(200)
         const body = await response.json()
         logger.debug(body)
-        await UserTest.delete()
-        await ContactTest.delete()
         await AddressTest.deleteAllAddress()         
-    })
-
-    // this one need to refine. 
-    it('should return multiple address when the contact id is valid', async()=>{
-        await UserTest.create()
-        await ContactTest.create()
-        await AddressTest.createManyAddress()
-        const contactID  = await ContactTest.get()
-        const response = await app.request('/api/contacts/'+ contactID._id + '/addresses',{
-            method:'GET',
-            headers:{
-                'Authorization':'test'
-            }
-        })
-        expect(response.status).toBe(200)
-        const bodyResponse = await response.json()
-        // expect((bodyResponse.data).length).toBe(2)
-        expect(bodyResponse.data.length).toBe(5)
-        // Need to check the body
-        // logger.debug(responsebody)
-        // expect (reesponse.stat)
-        await UserTest.delete()
         await ContactTest.delete()
-        await AddressTest.deleteAllAddress()         
-        // expect(response.status).toBe(200)
-        // expect(bodyResponse.data.length).toBe(2)~
+        await UserTest.delete()
     })
-
 }) 

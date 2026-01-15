@@ -154,6 +154,7 @@ export class AddressTest {
         return addressDetails
     }
 
+    // not use
     static async createManyAddress(){
         console.log('Creating many address on one contact')
         try{
