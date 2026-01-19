@@ -8,7 +8,7 @@ A robust, high-performance RESTful API for managing personal and professional co
 * **Secure Authentication:** User registration and login using **JWT (JSON Web Tokens)**.
 * **Complete CRUD:** Full Create, Read, Update, and Delete capabilities for contacts.
 * **Data Validation:** Integrated schema validation to ensure data integrity.
-* **Search & Filter:** Easily query contacts by name, email, or labels. -> *Coming Soon Features
+* **Search & Filter:** Easily query contacts by name, email, or labels.
 * **Security:** Third-party RESTful Rate Limiter
 * **Blazing Fast:** Powered by Bun's native performance optimizations.
 
